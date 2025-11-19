@@ -1,0 +1,29 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# venv（ローカル仮想環境はイメージに不要）
+venv/
+.env/
+
+# Git
+.git/
+.gitignore
+
+# VSCode
+.vscode/
+
+# Docker output
+*.log
+*.pid
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database（ローカル用DBはイメージに含めない）
+*.db
+*.sqlite3
+
+# README・docs 以外の不要ファイル
+*.md~

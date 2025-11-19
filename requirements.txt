@@ -1,0 +1,11 @@
+fastapi==0.110.0
+uvicorn[standard]==0.30.0  # FastAPI & 設定用
+pydantic==2.7.1
+pydantic-settings==2.3.1
+
+# DB 関連
+SQLAlchemy==2.0.29
+aiosqlite==0.20.0
+
+# ファイルアップロード
+python-multipart==0.0.9

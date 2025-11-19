@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# Virtual env（ローカルに venv がある人向け）
+venv/
+.env/
+
+# SQLite DB（ローカルで作られたものはGitに上げない）
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# VSCode
+.vscode/
+
+# Docker
+*.pid
+
+# Environments
+.env
+*.env
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
