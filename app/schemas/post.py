@@ -9,9 +9,10 @@ class PostBase(BaseModel):
 class PostCreate(PostBase):
     pass
 
+from datetime import datetime
 # レスポンス用（id, created_at が追加）
 class PostResponse(PostBase):
     id: int
     thread_id: int
     post_number: int
-    created_at: str
+    created_at: datetime
