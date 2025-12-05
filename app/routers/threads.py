@@ -1,14 +1,20 @@
+<<<<<<< HEAD
 from fastapi import APIRouter,Depends
 from app.models.thread import Thread
 from app.schemas.thread import ThreadResponse, ThreadCreate
 from app.database import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert
+=======
+from fastapi import APIRouter
+from app.schemas.thread import ThreadResponse, ThreadCreate
+>>>>>>> 49638701238ab485ebb6b3fcf46a767ea7309aa7
 
 router = APIRouter(
     prefix="/threads",
     tags=["Threads"]
 )
+
 
 
 # -----------------------------------
@@ -20,6 +26,7 @@ async def list_threads(db: Session = Depends(get_db)):
     result = db.execute(stmt).scalars().all()
     return result
 
+
 # -----------------------------------
 # スレッド詳細 GET /threads/{thread_id}
 # -----------------------------------
@@ -28,6 +35,7 @@ async def get_thread(thread_id: int, db: Session = Depends(get_db)):
     stmt = select(Thread).where(Thread.id == thread_id)
     result = db.execute(stmt).scalar_one()
     return result
+
 
 # -----------------------------------
 # スレッド作成 POST /threads
@@ -39,10 +47,13 @@ async def create_thread(thread: ThreadCreate,db: Session = Depends(get_db)):
     result = db.execute(stmt)
     db.commit()
 
+
     # 実行結果からidを取得(AUTOINCREMENT で生成された id を取得)
     new_id = result.lastrowid
+
 
     # 今作ったレコードを読み直し
     stmt2 = select(Thread).where(Thread.id == new_id)
     new_thread = db.execute(stmt2).scalar_one()
     return new_thread
+
