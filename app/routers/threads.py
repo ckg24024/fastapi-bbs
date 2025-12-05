@@ -1,14 +1,11 @@
-<<<<<<< HEAD
+
 from fastapi import APIRouter,Depends
 from app.models.thread import Thread
 from app.schemas.thread import ThreadResponse, ThreadCreate
 from app.database import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert
-=======
-from fastapi import APIRouter
-from app.schemas.thread import ThreadResponse, ThreadCreate
->>>>>>> 49638701238ab485ebb6b3fcf46a767ea7309aa7
+
 
 router = APIRouter(
     prefix="/threads",
