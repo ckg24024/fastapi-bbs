@@ -1,11 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR,"bbs.db")
-
-DATABASE_URL = f"sqlite:///{DB_PATH}"
+DATABASE_URL = "sqlite:///./bbs.db"
 
 engine = create_engine(
     DATABASE_URL,
@@ -19,3 +15,13 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
+# ============================
+# DB セッション（依存性注入用）
+# ============================
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
