@@ -10,4 +10,5 @@ class Post(Base):
     post_number = Column(Integer, nullable=False)
     parent_post_id = Column(Integer, ForeignKey("posts.id"), nullable=True)
     content = Column(String, nullable=False)
+    author = Column(String, nullable=False, default="名無しさん")
     created_at = Column(DateTime, default=datetime.utcnow)
