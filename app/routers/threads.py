@@ -49,6 +49,60 @@ async def list_threads_page(request: Request, db: Session = Depends(get_db)):
         "latest_posts": latest_posts}
     )
 
+# -----------------------------------
+# フロント側処理 スレッドの新規作成画面を表示
+# -----------------------------------
+@router.get("/new", response_class=HTMLResponse)
+async def new_thread_page(request: Request):
+    return templates.TemplateResponse("new_thread.html", {"request": request})
+
+
+# -----------------------------------
+# フロント側処理 スレッドの新規作成
+# -----------------------------------
+from fastapi import Form, File, UploadFile, Request
+from fastapi.responses import RedirectResponse
+from sqlalchemy import insert, select
+from sqlalchemy.orm import Session
+from app.models.thread import Thread
+from app.models.post import Post
+from app.database import get_db
+
+
+@router.post("/create")
+async def create_thread_front(
+    request: Request,
+    title: str = Form(...),
+    author: str = Form(""),
+    content: str = Form(...),
+    image: UploadFile | None = File(None),
+    db: Session = Depends(get_db)
+):
+    # (1) Thread 作成
+    stmt = insert(Thread).values(title=title)
+    result = db.execute(stmt)
+    db.commit()
+
+    new_thread_id = result.lastrowid
+
+    # (2) Post（本文）作成
+    values = {
+        "thread_id": new_thread_id,
+        "content": content,
+    }
+
+    # author 空欄なら DEFAULT '名無しさん' を使う
+    if author.strip():
+        values["author"] = author
+
+    db.execute(insert(Post).values(values))
+    db.commit()
+
+    # (3) スレッド詳細へリダイレクト
+    return RedirectResponse(
+        url=f"/threads/{new_thread_id}",
+        status_code=303
+    )
 
 # -----------------------------------
 # スレッド一覧 GET /threads

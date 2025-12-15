@@ -18,7 +18,7 @@
             font-size: 24px;
         }
 
-        /* 検索ボックスとボタンを横並び */
+        /* --- 検索ボックスとボタンを横並び --- */
         .search-area {
             display: flex;
             gap: 8px;
@@ -30,6 +30,7 @@
             padding: 6px;
         }
 
+        /* --- セクション用ボックス --- */
         .section-box {
             border: 1px solid #ccc;
             padding: 15px;
@@ -54,6 +55,56 @@
 
         .button:hover {
             background-color: #ddd;
+        }
+
+        /* --- 追加：フォーム用スタイル（new_thread.html で使用） --- */
+        form.standard-form {
+            width: 90%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+
+        form.standard-form label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        form.standard-form input[type="text"],
+        form.standard-form textarea,
+        form.standard-form input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 1rem;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        form.standard-form .buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 20px;
+        }
+
+        form.standard-form button {
+            padding: 8px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        nav.menu {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        nav.menu a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        nav.menu a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>

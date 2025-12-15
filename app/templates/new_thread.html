@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>新規スレッド作成</h2>
+
+<form action="/threads/create" method="post" enctype="multipart/form-data" class="standard-form">
+
+    <!-- スレッドタイトル -->
+    <label for="title">スレッドタイトル（必須）</label>
+    <input type="text" id="title" name="title" required>
+
+    <!-- 名前（任意） -->
+    <label for="author">名前（任意）</label>
+    <input type="text" id="author" name="author" placeholder="未入力なら『名無しさん』扱い">
+
+    <!-- 本文（必須） -->
+    <label for="content">本文（必須）</label>
+    <textarea id="content" name="content" rows="8" required></textarea>
+
+    <!-- 画像添付（後で実装） -->
+    <label for="image">画像添付（任意）</label>
+    <div class="image-box">
+        <input type="file" id="image" name="image" accept=".jpg,.png,.gif">
+        <span class="file-info">※jpg / png / gif 2MBまで（後で決める必要あり）</span>
+    </div>
+
+    <div class="buttons">
+        <button type="submit" class="btn-create">作成する</button>
+        <button type="reset" class="btn-reset">リセット</button>
+    </div>
+
+</form>
+
+{% endblock %}
