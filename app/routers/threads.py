@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter,Depends, HTTPException, Request
 from app.models.thread import Thread
 from app.models.post import Post
+
 from app.schemas.thread import ThreadResponse, ThreadCreate
 from app.database import get_db
 from sqlalchemy.orm import Session
@@ -14,10 +15,11 @@ router = APIRouter(
 from fastapi import Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="app/templates")
 # -----------------------------------
 # フロント側処理 一覧
 # -----------------------------------
-templates = Jinja2Templates(directory="app/templates")
 @router.get("/list", response_class=HTMLResponse)
 async def list_threads_page(request: Request, db: Session = Depends(get_db)):
 
@@ -32,6 +34,7 @@ async def list_threads_page(request: Request, db: Session = Depends(get_db)):
             Post.content,
             Post.author,
             Post.created_at,
+            Post.attachment,
             Thread.title.label("thread_title"),
             Thread.id.label("thread_id")
         )
@@ -67,7 +70,10 @@ from sqlalchemy.orm import Session
 from app.models.thread import Thread
 from app.models.post import Post
 from app.database import get_db
+import os
 
+UPLOAD_DIR = "app/static/uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/create")
 async def create_thread_front(
@@ -76,33 +82,53 @@ async def create_thread_front(
     author: str = Form(""),
     content: str = Form(...),
     image: UploadFile | None = File(None),
-    db: Session = Depends(get_db)
-):
+    db: Session = Depends(get_db)):
+
     # (1) Thread 作成
     stmt = insert(Thread).values(title=title)
     result = db.execute(stmt)
     db.commit()
-
     new_thread_id = result.lastrowid
+
+    # (1.5)添付ファイル処理
+    attachment_filename = None
+    if image and image.filename:
+        # ファイル名の決定
+        _,ext = os.path.splitext(image.filename)
+        filename = f"thread{new_thread_id}_post1{ext}"
+        save_path = os.path.join(UPLOAD_DIR,filename)
+
+        # 保存
+        with open(save_path,"wb") as f:
+            f.write(await image.read())
+        attachment_filename = filename
+
 
     # (2) Post（本文）作成
     values = {
         "thread_id": new_thread_id,
         "content": content,
+        "post_number":1,
     }
 
     # author 空欄なら DEFAULT '名無しさん' を使う
     if author.strip():
         values["author"] = author
 
+    # 添付ファイルがあれば追加
+    if attachment_filename:
+        values["attachment"] = attachment_filename
+
     db.execute(insert(Post).values(values))
     db.commit()
 
     # (3) スレッド詳細へリダイレクト
     return RedirectResponse(
-        url=f"/threads/{new_thread_id}",
+        url=f"/threads/{new_thread_id}/view",
         status_code=303
     )
+
+
 
 # -----------------------------------
 # スレッド一覧 GET /threads

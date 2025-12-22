@@ -27,9 +27,15 @@
 
     {% for post in latest_posts %}
         <div>
-            <strong>{{ post.thread_title }} - {{ post.author }}</strong><br>
+            <strong>{{ post.thread_title }} - {{post.author}}</strong><br>
             {{ post.content }}<br>
             <small>日時：{{ post.created_at }}</small>
+            {% if post.attachment %}
+            <div class="attachment">
+                <img src="/static/uploads/{{ post.attachment }}"
+                        style="max-width: 300px; border: 1px solid #ccc;">
+            </div>
+            {% endif %}
             <hr>
         </div>
     {% endfor %}

@@ -10,5 +10,7 @@ class Post(Base):
     post_number = Column(Integer, nullable=False)
     parent_post_id = Column(Integer, ForeignKey("posts.id"), nullable=True)
     content = Column(String, nullable=False)
-    author = Column(String, nullable=False, default="名無しさん")
     created_at = Column(DateTime, default=datetime.utcnow)
+    author = Column(String, nullable=False, server_default="名無しさん")
+    # 追加：添付ファイル
+    attachment = Column(String, nullable=True)  # ← ファイル名 or ファイルパスを保存 

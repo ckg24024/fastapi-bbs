@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="section-box">
+    {% for post in latest_posts %}
+        <div>
+            {% if post.thread_title %}
+                {{ post.post_number }}:
+                <strong>{{ post.thread_title }} - {{ post.author }}</strong><br>
+            {% else %}
+                {{ post.post_number }}:
+                <strong>{{ post.author }}</strong><br>
+            {% endif %}
+
+            {{ post.content }}<br>
+            <small>日時：{{ post.created_at }}</small>
+
+           {% if post.parent_post_number %}
+                <div class="reply-ref">
+                    >>{{ post.parent_post_number }}
+                </div>
+            {% endif %}
+            <hr>
+        </div>
+
+        {% if post.thread_title %}
+            <h3>投稿一覧</h3>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<h2>投稿フォーム</h2>
+<form action="/threads/{{ thread_id }}/post"
+      method="post"
+      enctype="multipart/form-data"
+      class="standard-form">
+
+    <!-- 名前（任意） -->
+    <label for="author">名前（任意）</label>
+    <input type="text" id="author" name="author"
+           placeholder="未入力なら『名無しさん』扱い">
+
+    <!-- 本文（必須） -->
+    <label for="content">本文（必須）</label>
+    <textarea id="content" name="content" rows="8" required></textarea>
+
+    <!-- 画像添付 -->
+    <label for="image">画像添付（任意）</label>
+    <input type="file" id="image" name="image"
+           accept=".jpg,.png,.gif">
+
+    <button type="submit">投稿する</button>
+</form>
+{% endblock %}
