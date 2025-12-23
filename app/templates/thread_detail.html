@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-<hr>
 {% block content %}
+<hr>
 <script>
     function repost_no(num,hidden_num){
         const elm = document.getElementById("parent_post_id");
@@ -30,7 +30,7 @@
                         style="max-width: 300px; border: 1px solid #ccc;">
             </div>
             {% endif %}
-            <a onclick="repost_no({{post.post_number}},{{post.id}})"">返信</a>
+            <a onclick="repost_no({{ post.post_number }}, {{ post.id }})">返信</a>
             <hr>
         </div>
         {%if post.thread_title %}
