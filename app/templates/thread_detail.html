@@ -1,54 +1,72 @@
 {% extends "base.html" %}
-
+<hr>
 {% block content %}
+<script>
+    function repost_no(num,hidden_num){
+        const elm = document.getElementById("parent_post_id");
+        elm.value = num;
+        document.getElementById("parent_post_id_hidden").value = hidden_num;
+        window.scrollTo( {top: elm.offsetTop, behavior:'smooth'});
+
+    }
+
+</script>
 <div class="section-box">
     {% for post in latest_posts %}
         <div>
-            {% if post.thread_title %}
-                {{ post.post_number }}:
-                <strong>{{ post.thread_title }} - {{ post.author }}</strong><br>
-            {% else %}
-                {{ post.post_number }}:
-                <strong>{{ post.author }}</strong><br>
-            {% endif %}
-
+        {%if post.thread_title %}
+            {{post.post_number}}:<strong>{{ post.thread_title }} - {{post.author}}</strong><br>
+        {% else %}
+            {{post.post_number}}:<strong>{{post.author}}</strong><br>
+        {% endif%}
+        {% if post.parent_post_number %}
+            >>{{ post.parent_post_number }}
+        {% endif %}
             {{ post.content }}<br>
             <small>日時：{{ post.created_at }}</small>
-
-           {% if post.parent_post_number %}
-                <div class="reply-ref">
-                    >>{{ post.parent_post_number }}
-                </div>
+            {% if post.attachment %}
+            <div class="attachment">
+                <img src="/static/uploads/{{ post.attachment }}"
+                        style="max-width: 300px; border: 1px solid #ccc;">
+            </div>
             {% endif %}
+            <a onclick="repost_no({{post.post_number}},{{post.id}})"">返信</a>
             <hr>
         </div>
-
-        {% if post.thread_title %}
-            <h3>投稿一覧</h3>
+        {%if post.thread_title %}
+        <h3>投稿一覧</h3>
         {% endif %}
     {% endfor %}
 </div>
-
 <h2>投稿フォーム</h2>
-<form action="/threads/{{ thread_id }}/post"
-      method="post"
-      enctype="multipart/form-data"
-      class="standard-form">
+<form action="/threads/{{thread_id}}/post" method="post" enctype="multipart/form-data" class="standard-form">
+
+    <!-- 返信番号 -->
+    <label for="parent_post_id">返信番号（任意）</label>
+    <input type="text" id="parent_post_id" name="parent_post_id">
+    <input type="hidden" id="parent_post_id_hidden" name="parent_post_id_hidden">
+    
 
     <!-- 名前（任意） -->
     <label for="author">名前（任意）</label>
-    <input type="text" id="author" name="author"
-           placeholder="未入力なら『名無しさん』扱い">
+    <input type="text" id="author" name="author" placeholder="未入力なら『名無しさん』扱い">
 
     <!-- 本文（必須） -->
     <label for="content">本文（必須）</label>
     <textarea id="content" name="content" rows="8" required></textarea>
 
-    <!-- 画像添付 -->
+    <!-- 画像添付（後で実装） -->
     <label for="image">画像添付（任意）</label>
-    <input type="file" id="image" name="image"
-           accept=".jpg,.png,.gif">
+    <div class="image-box">
+        <input type="file" id="image" name="image" accept=".jpg,.png,.gif">
+        <span class="file-info">※jpg / png / gif 2MBまで（後で決める必要あり）</span>
+    </div>
 
-    <button type="submit">投稿する</button>
+    <div class="buttons">
+        <button type="submit" class="btn-create">作成する</button>
+        <button type="reset" class="btn-reset">リセット</button>
+    </div>
+
 </form>
+
 {% endblock %}
